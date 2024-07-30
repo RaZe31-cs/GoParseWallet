@@ -5,7 +5,9 @@ import (
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 	"github.com/xssnick/tonutils-go/liteclient"
 )
 
@@ -17,7 +19,10 @@ type appConfig struct {
 	MainnetConfig *liteclient.GlobalConfig
 
 	Wallet struct {
-		Seed []string
+		Seed          []string
+		AddressParse  string
+		JettonAddress string
+		UuidGoogle          string
 	}
 }
 
@@ -39,6 +44,18 @@ func InitConfig() error {
 	defer jsonConfig.Close()
 
 	CFG.Wallet.Seed = strings.Split(os.Getenv("SEED"), " ")
+
+	CFG.Wallet.AddressParse = os.Getenv("ADDRESS_PARSE")
+
+	CFG.Wallet.JettonAddress = os.Getenv("JETTON_ADDRESS")
+
+	CFG.Wallet.UuidGoogle = uuid.New().String()
+	logrus.Info("AddressParse: ", CFG.Wallet.AddressParse)
+
+	logrus.Info("JettonAddress: ", CFG.Wallet.JettonAddress)
+
+	logrus.Info("Uuid: ", CFG.Wallet.UuidGoogle)
+
 
 	return nil
 }
